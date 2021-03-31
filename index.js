@@ -35,9 +35,15 @@ io.on('connection', function(socket){
 		io.emit('member_exit', { from, user, counter });
 	});
 
+	socket.on('confetti_thrown', function() {
+		io.emit('confetti_received', { from, user });
+		console.log('confetti');
+	})
+
 	console.log('usersDict: ', usersDict);
 	console.log('count ', counter);
 	io.emit('new_member', { from, user, counter });
+	
 });
 
 http.listen(port, function(){
