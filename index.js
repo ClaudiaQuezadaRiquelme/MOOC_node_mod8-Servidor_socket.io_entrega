@@ -13,7 +13,7 @@ app.get("*", function(req,res,next) {
 });
 
 let usersDict = {};
-let usersCount = 0;
+let counter = 0;
 
  
 io.on('connection', function(socket){
@@ -21,7 +21,7 @@ io.on('connection', function(socket){
 	const from = socket.id;
 
 	usersDict[from] = user;
-	usersCount += 1;
+	counter += 1;
 	
 	socket.on('chat_message_sent', function(msg){
 		io.emit('chat_message_received', { ...msg, user, from});
@@ -29,15 +29,15 @@ io.on('connection', function(socket){
 
 	socket.on('disconnect', function(msg){
 		delete usersDict[from];
-		usersCount -= 1;
+		counter -= 1;
 		console.log('usersDict: ', usersDict);
-		console.log('count ', usersCount);
-		io.emit('member_exit', { from, user });
+		console.log('count ', counter);
+		io.emit('member_exit', { from, user, counter });
 	});
 
 	console.log('usersDict: ', usersDict);
-	console.log('count ', usersCount);
-	io.emit('new_member', { from, user });
+	console.log('count ', counter);
+	io.emit('new_member', { from, user, counter });
 });
 
 http.listen(port, function(){
